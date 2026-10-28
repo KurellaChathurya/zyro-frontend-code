@@ -15,8 +15,8 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
     setLoading(true);
 
     try {
-      // Direct call to your working Spring Boot API
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      // Direct call to your live Render Spring Boot API
+      const response = await fetch('https://zyro-backend-wsml.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'Login failed! Server unreachable.');
+      setError(err.message || 'Login failed! Server unreachable or waking up.');
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
           disabled={loading}
           style={{ width: '100%', padding: '12px', background: '#db2777', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', fontSize: '0.95rem' }}
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in (waking up server...)' : 'Login'}
         </button>
       </form>
 

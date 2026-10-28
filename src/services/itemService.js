@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/items';
+const API_BASE_URL = 'https://zyro-backend-wsml.onrender.com/api/items';
 
 export const getAllItems = () => {
   return axios.get(API_BASE_URL);

@@ -21,8 +21,8 @@ function Register({ onSwitchToLogin }) {
     setLoading(true);
 
     try {
-      // డైరెక్ట్ గా మన స్ప్రింగ్ బూట్ పోర్ట్ 8080 కి కనెక్ట్ చేస్తున్నాం
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      // Render లైవ్ స్ప్రింగ్ బూట్ బ్యాకెండ్‌కి కనెక్ట్ చేస్తున్నాం
+      const response = await fetch('https://zyro-backend-wsml.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ function Register({ onSwitchToLogin }) {
 
     } catch (err) {
       console.error('Registration Error:', err);
-      setError(err.message || 'Registration failed. Server unreachable.');
+      setError(err.message || 'Registration failed. Server unreachable or waking up.');
     } finally {
       setLoading(false);
     }
@@ -106,7 +106,7 @@ function Register({ onSwitchToLogin }) {
           disabled={loading}
           style={{ width: '100%', padding: '12px', background: '#db2777', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', fontSize: '0.95rem' }}
         >
-          {loading ? 'Registering...' : 'Register'}
+          {loading ? 'Registering (waking up server...)' : 'Register'}
         </button>
       </form>
 
