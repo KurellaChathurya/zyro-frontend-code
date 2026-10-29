@@ -13,27 +13,28 @@ function DraperDashboard({ onBackToShop }) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [bookings, setBookings] = useState(() => {
-  const savedBookings = localStorage.getItem('draperBookings');
-  return savedBookings ? JSON.parse(savedBookings) : [
-    {
-      id: 'DRP-501',
-      customerName: 'Kavya Reddy',
-      serviceType: 'Bridal Saree Pre-pleating & Draping',
-      eventDate: '15 Oct 2026',
-      timeSlot: '08:00 AM - 10:00 AM',
-      venue: 'Jubilee Hills, Hyderabad',
-      status: 'Confirmed'
-    },
-    {
-      id: 'DRP-502',
-      customerName: 'Vaishnavi',
-      serviceType: 'Traditional Maharashtrian Style',
-      eventDate: '18 Oct 2026',
-      timeSlot: '04:00 PM - 06:00 PM',
-      venue: 'Gachibowli, Hyderabad',
-      status: 'Pending Acceptance'
-    }
-  ]);
+    const savedBookings = localStorage.getItem('draperBookings');
+    return savedBookings ? JSON.parse(savedBookings) : [
+      {
+        id: 'DRP-501',
+        customerName: 'Kavya Reddy',
+        serviceType: 'Bridal Saree Pre-pleating & Draping',
+        eventDate: '15 Oct 2026',
+        timeSlot: '08:00 AM - 10:00 AM',
+        venue: 'Jubilee Hills, Hyderabad',
+        status: 'Confirmed'
+      },
+      {
+        id: 'DRP-502',
+        customerName: 'Vaishnavi',
+        serviceType: 'Traditional Maharashtrian Style',
+        eventDate: '18 Oct 2026',
+        timeSlot: '04:00 PM - 06:00 PM',
+        venue: 'Gachibowli, Hyderabad',
+        status: 'Pending Acceptance'
+      }
+    ];
+  });
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
