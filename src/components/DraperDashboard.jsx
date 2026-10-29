@@ -12,7 +12,9 @@ function DraperDashboard({ onBackToShop }) {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [bookings, setBookings] = useState([
+  const [bookings, setBookings] = useState(() => {
+  const savedBookings = localStorage.getItem('draperBookings');
+  return savedBookings ? JSON.parse(savedBookings) : [
     {
       id: 'DRP-501',
       customerName: 'Kavya Reddy',
