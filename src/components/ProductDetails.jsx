@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 
 function ProductDetails({ product, onBack, onAddToCart }) {
+  const handleBooking = () => {
+    if (includeDraper) {
+      const newBooking = {
+        id: 'DRP-' + Math.floor(100 + Math.random() * 900),
+        customerName: 'Kurella Chathurya',
+        serviceType: 'Bridal Saree Pre-pleating & Draping',
+        eventDate: '25 Nov 2026',
+        timeSlot: '10:00 AM - 12:00 PM',
+        venue: 'Hyderabad',
+        status: 'Pending Acceptance'
+      };
+      const existingBookings = JSON.parse(localStorage.getItem('draperBookings') || '[]');
+      localStorage.setItem('draperBookings', JSON.stringify([newBooking, ...existingBookings]));
+    }
+    alert(`🎉 Outfit booked successfully! ${includeDraper ? 'Saree Draper (₹800) added to your booking.' : ''}`);
+  };
+
   const [includeDraper, setIncludeDraper] = useState(false);
   const draperFee = 800;
   
@@ -57,7 +74,7 @@ function ProductDetails({ product, onBack, onAddToCart }) {
               <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#831843' }}>₹{totalPrice}</span>
             </div>
             <button 
-              onClick={() => alert(`🎉 Outfit booked successfully with Draper Add-on: ₹${totalPrice}!`)}
+              onClick={handleBooking} //`🎉 Outfit booked successfully with Draper Add-on: ₹${totalPrice}!`)}
               style={{ background: '#db2777', color: '#ffffff', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}
             >
               Proceed to Checkout
