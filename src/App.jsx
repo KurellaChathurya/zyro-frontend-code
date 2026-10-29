@@ -1,3 +1,6 @@
+
+import DraperDashboard from './components/DraperDashboard';
+import DraperDirectory from './components/DraperDirectory';
 import RenterPromoModal from './components/RenterPromoModal';
 import React, { useEffect, useState, useRef } from 'react';
 import { getAllItems } from './services/itemService';
