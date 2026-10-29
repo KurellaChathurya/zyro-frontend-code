@@ -13,7 +13,6 @@ import AIChatbot from './components/AIChatbot';
 import CustomerProfile from './components/CustomerProfile';
 import RenterDashboard from './components/RenterDashboard';
 import RoleSelect from './components/RoleSelect';
-import DraperDashboard from './components/DraperDashboard';
 import './App.css';
 
 function App() {
