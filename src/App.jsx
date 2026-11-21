@@ -581,7 +581,7 @@ function MainApp({ currentUser, setCurrentUser }) {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '1.5rem' }}>💄</span>
+                  <span style={{ fontSize: '1.5rem' }}>🥻</span>
                   <div>
                     <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: '#1f161a' }}>Saree Draper Portal</h4>
                     <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: '#705b64' }}>Book stylists or register as draper</p>
@@ -646,7 +646,7 @@ function MainApp({ currentUser, setCurrentUser }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '1.5rem' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 900, color: '#1f161a' }}>
-                {activeView === 'draper-portal' ? '💄 Saree Draper Service Portal' :
+                {activeView === 'draper-portal' ? '🥻 Saree Draper Service Portal' :
                  activeView === 'ai-stylist' ? '✨ AI Virtual Stylist Studio' :
                  activeView === 'renter-dashboard' ? '👗 Renter Wardrobe & Inspections' :
                  activeView === 'profile' ? '👤 My Rental Account' :

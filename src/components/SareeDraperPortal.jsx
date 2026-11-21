@@ -193,7 +193,7 @@ function SareeDraperPortal({ currentUser, onBackToShop }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', flexWrap: 'wrap', gap: '8px' }}>
         <button className="btn-secondary" onClick={onBackToShop}>← Back to Marketplace</button>
         <span style={{ background: '#fdf2f8', color: '#be185d', padding: '6px 12px', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 800 }}>
-          {isDraperUser ? '💄 Draper Partner Dashboard' : '✨ Verified Local Saree Drapers'}
+          {isDraperUser ? '🥻 Draper Partner Dashboard' : '✨ Verified Local Saree Drapers'}
         </span>
       </div>
 
@@ -267,7 +267,7 @@ function SareeDraperPortal({ currentUser, onBackToShop }) {
           </div>
 
           <div style={{ background: '#fff1f2', border: '1.5px solid #fecdd3', borderRadius: '18px', padding: '1.3rem', marginBottom: '1.5rem' }}>
-            <h3 style={{ margin: '0 0 10px', color: '#be185d' }}>💄 Welcome, {currentUser.name} — Draper Partner Hub</h3>
+            <h3 style={{ margin: '0 0 10px', color: '#be185d' }}>🥻 Welcome, {currentUser.name} — Draper Partner Hub</h3>
             <form onSubmit={handlePublishDraperProfile} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', marginBottom: '1rem' }}>
               <input
                 type="text"
@@ -395,7 +395,7 @@ function SareeDraperPortal({ currentUser, onBackToShop }) {
                 style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }}
                 onClick={() => setBookingModalDraper(d)}
               >
-                💄 Select Style & Book
+                🥻 Select Style & Book
               </button>
               <button className="btn-secondary" style={{ padding: '8px 10px', fontSize: '0.8rem' }} onClick={() => handleWhatsApp(d.phone, d.name)}>
                 💬 Chat
