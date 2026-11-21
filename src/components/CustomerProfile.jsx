@@ -1,3 +1,4 @@
+import LiveOutfitGpsTracker from './LiveOutfitGpsTracker';
 import React, { useState } from 'react';
 
 function CustomerProfile({
@@ -125,6 +126,7 @@ function CustomerProfile({
 
   return (
     <div className="profile-wrapper">
+      <LiveOutfitGpsTracker currentUser={currentUser || user || true} forcedRole="CUSTOMER" />
       <div style={{ marginBottom: '1.2rem' }}>
         <button onClick={onBackToShop} className="btn-secondary" style={{ fontWeight: 700 }}>
           ← Back to Shop

@@ -1,3 +1,4 @@
+import LiveOutfitGpsTracker from './LiveOutfitGpsTracker';
 import React, { useState, useRef } from 'react';
 
 function RenterDashboard({
@@ -61,6 +62,7 @@ function RenterDashboard({
 
   return (
     <div className="profile-wrapper">
+      <LiveOutfitGpsTracker currentUser={currentUser || user || true} forcedRole="OWNER" />
       {/* 👈 Back Button to Catalog */}
       <button onClick={onBackToShop} className="btn-secondary" style={{ marginBottom: '1.2rem', fontWeight: 700 }}>
         ← Back to Catalog Dashboard
