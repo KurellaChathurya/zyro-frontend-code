@@ -41,4 +41,21 @@ function SareeDrapingAddon({ includeDraping, setIncludeDraping }) {
   );
 }
 
-export default SareeDrapingAddon;
+// Combo Banner Wrapper
+const OriginalAddon = SareeDrapingAddon;
+function SareeDrapingAddonWithCombo(props) {
+  return (
+    <div>
+      <div style={{ background: "linear-gradient(90deg, #fff1f2, #fdf2f8)", border: "1.5px dashed #e11d48", borderRadius: "12px", padding: "8px 12px", marginBottom: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#be185d" }}>
+          🎁 COMBO OFFER: Outfit + 🥻 Saree Draper
+        </span>
+        <span style={{ background: "#e11d48", color: "#fff", fontSize: "0.7rem", fontWeight: 900, padding: "2px 8px", borderRadius: "8px" }}>
+          AUTO ₹100 OFF!
+        </span>
+      </div>
+      <OriginalAddon {...props} />
+    </div>
+  );
+}
+export default SareeDrapingAddonWithCombo;

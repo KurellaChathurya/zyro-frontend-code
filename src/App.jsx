@@ -7,6 +7,7 @@ import OwnerEarningsSummary from './components/OwnerEarningsSummary';
 import CatalogFilters from './components/CatalogFilters';
 import SareeDrapingAddon from './components/SareeDrapingAddon';
 import SareeDraperPortal from './components/SareeDraperPortal';
+import { HowZyroWorksModal, LiveOrderTrackerBanner } from './components/ZyroDemoFeatures';
 import './App.css';
 
 import { SHOWCASE_PRODUCTS } from './data/showcaseProducts';
@@ -14,6 +15,7 @@ import { SHOWCASE_PRODUCTS } from './data/showcaseProducts';
 function MainApp({ currentUser, setCurrentUser }) {
   const navigate = useNavigate();
 
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [selectedPortal, setSelectedPortal] = useState('customer');
   const [activeView, setActiveView] = useState('shop');
   const [profileTab, setProfileTab] = useState('orders');
@@ -460,7 +462,7 @@ function MainApp({ currentUser, setCurrentUser }) {
     const total = (selectedProduct.rentalPricePerDay * rentDays) +
                   (selectedProduct.securityDeposit || 0) +
                   (deliveryMethod === 'delivery' ? 150 : 0) +
-                  (includeDraping ? 399 : 0);
+                  (includeDraping ? 299 : 0);
     const newOrd = {
       id: `ZYR-${Math.floor(1000 + Math.random() * 9000)}`,
       title: includeDraping ? `${selectedProduct.title} + Saree Draping` : selectedProduct.title,
@@ -670,6 +672,12 @@ function MainApp({ currentUser, setCurrentUser }) {
             )}
           </div>
 
+          <div style={{ background: "linear-gradient(90deg, #e11d48, #be185d)", color: "#fff", padding: "10px 16px", borderRadius: "14px", marginBottom: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+            <span style={{ fontSize: "0.82rem", fontWeight: 800 }}>🎉 Zyro Wedding Combo: Rent any Saree/Lehenga + Book a 🥻 Saree Draper & get instant ₹100 OFF!</span>
+            <button type="button" onClick={() => setActiveView('draper-portal')} style={{ background: "#fff", color: "#be185d", border: "none", padding: "5px 12px", borderRadius: "10px", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer" }}>Explore 🥻 Drapers</button>
+          </div>
+          <LiveOrderTrackerBanner />
+          {showHowItWorks && <HowZyroWorksModal onClose={() => setShowHowItWorks(false)} />}
           {activeView === 'draper-portal' && (
             <SareeDraperPortal currentUser={currentUser} onBackToShop={() => setActiveView('shop')} />
           )}
@@ -1040,7 +1048,7 @@ function MainApp({ currentUser, setCurrentUser }) {
             </div>
 
             <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#e11d48', marginBottom: '12px' }}>
-              Total Payable: ₹{(selectedProduct.rentalPricePerDay * rentDays) + (selectedProduct.securityDeposit || 0) + (deliveryMethod === 'delivery' ? 150 : 0) + (includeDraping ? 399 : 0)}
+              Total Payable: ₹{(selectedProduct.rentalPricePerDay * rentDays) + (selectedProduct.securityDeposit || 0) + (deliveryMethod === 'delivery' ? 150 : 0) + (includeDraping ? 299 : 0)}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
