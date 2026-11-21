@@ -1,125 +1,188 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Register({ onSwitchToLogin }) {
+function Register({ selectedPortal, onRegisterSuccess }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Portal role ni URL state nundi leda props nundi teesukuntundi
+  const activePortal = location.state?.role || selectedPortal || 'customer';
+  const isRenter = activePortal.toLowerCase() === 'renter' || activePortal.toLowerCase() === 'owner';
+
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
     email: '',
-    password: ''
+    password: '',
+    role: isRenter ? 'RENTER' : 'CUSTOMER'
   });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    if (formData.phone.replace(/[^0-9]/g, '').length < 10) {
+      return setError('Please enter a valid 10-digit mobile number.');
+    }
     setError('');
     setLoading(true);
 
     try {
-      // Render లైవ్ స్ప్రింగ్ బూట్ బ్యాకెండ్‌కి కనెక్ట్ చేస్తున్నాం
-      const response = await fetch('https://zyro-backend-wsml.onrender.com/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+      const res = await axios.post('https://zyro-backend-wsml.onrender.com/api/auth/register', {
+        ...formData,
+        role: isRenter ? 'RENTER' : 'CUSTOMER'
       });
 
-      if (!response.ok) {
-        throw new Error('Registration failed. Please check details or email already exists.');
+      const userData = res.data || {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        role: isRenter ? 'RENTER' : 'CUSTOMER'
+      };
+
+      localStorage.setItem('zyroUser', JSON.stringify(userData));
+      alert(`🎉 ${isRenter ? 'Owner / Renter' : 'Customer'} Registration Successful!`);
+
+      if (onRegisterSuccess) {
+        onRegisterSuccess(userData);
+      } else {
+        navigate('/');
       }
-
-      const data = await response.json();
-      console.log('Registered successfully:', data);
-
-      setMessage('🎉 Registration successful! Redirecting to login...');
-      setFormData({ name: '', email: '', password: '' });
-
-      // సక్సెస్ అయిన 1 సెకనుకు ఆటోమేటిక్ గా లాగిన్ స్క్రీన్ కి తీసుకెళ్తుంది
-      setTimeout(() => {
-        onSwitchToLogin();
-      }, 1000);
-
     } catch (err) {
       console.error('Registration Error:', err);
-      setError(err.message || 'Registration failed. Server unreachable or waking up.');
+      const backendError =
+        err.response?.data?.message ||
+        (typeof err.response?.data === 'string' ? err.response.data : null);
+
+      setError(backendError || 'Registration failed. Please check your details and try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '380px', margin: '30px auto', padding: '24px', background: '#ffffff', border: '1.5px solid #fce7f0', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-      <h2 style={{ color: '#831843', textAlign: 'center', marginBottom: '8px' }}>Create Account</h2>
-      <p style={{ textAlign: 'center', color: '#705b64', fontSize: '0.85rem', marginBottom: '16px' }}>Join Zyro Couture Rentals</p>
-      
-      {message && <p style={{ color: '#047857', background: '#ecfdf5', padding: '8px', borderRadius: '8px', fontSize: '0.85rem', textAlign: 'center' }}>{message}</p>}
-      {error && <p style={{ color: '#b91c1c', background: '#fee2e2', padding: '8px', borderRadius: '8px', fontSize: '0.85rem', textAlign: 'center' }}>{error}</p>}
-      
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#374151' }}>Full Name:</label>
-          <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
-            placeholder="Enter your name"
-            style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '8px', border: '1px solid #fbcfe8', fontSize: '0.9rem', outline: 'none' }} 
-          />
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#fff5f7',
+      padding: '20px'
+    }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '420px',
+        background: '#ffffff',
+        padding: '30px',
+        borderRadius: '16px',
+        boxShadow: '0 10px 25px rgba(225, 29, 72, 0.08)',
+        border: '1px solid #ffe4e6'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <span style={{ color: '#e11d48', fontWeight: 800, fontSize: '0.9rem', letterSpacing: '0.5px' }}>
+            {isRenter ? 'OWNER / RENTER ACCESS' : 'CUSTOMER PORTAL'}
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#705b64',
+              fontWeight: 700,
+              cursor: 'pointer',
+              fontSize: '0.85rem'
+            }}
+          >
+            ← Back to Home
+          </button>
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#374151' }}>Email Address:</label>
-          <input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            required 
-            placeholder="name@example.com"
-            style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '8px', border: '1px solid #fbcfe8', fontSize: '0.9rem', outline: 'none' }} 
-          />
-        </div>
+        <h2 style={{ marginBottom: '20px', color: '#1f1216', fontSize: '1.5rem' }}>
+          Create Account
+        </h2>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#374151' }}>Password:</label>
-          <input 
-            type="password" 
-            name="password" 
-            value={formData.password} 
-            onChange={handleChange} 
-            required 
-            placeholder="••••••••"
-            style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '8px', border: '1px solid #fbcfe8', fontSize: '0.9rem', outline: 'none' }} 
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <p style={{
+              color: '#e11d48',
+              background: '#fff1f2',
+              padding: '10px',
+              borderRadius: '8px',
+              fontSize: '0.82rem',
+              marginBottom: '14px',
+              fontWeight: 600
+            }}>
+              {error}
+            </p>
+          )}
 
-        <button 
-          type="submit" 
-          disabled={loading}
-          style={{ width: '100%', padding: '12px', background: '#db2777', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', fontSize: '0.95rem' }}
-        >
-          {loading ? 'Registering (waking up server...)' : 'Register'}
-        </button>
-      </form>
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              required
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+          </div>
 
-      <p style={{ marginTop: '16px', textAlign: 'center', fontSize: '0.85rem', color: '#705b64' }}>
-        Already have an account?{' '}
-        <button 
-          type="button"
-          onClick={onSwitchToLogin} 
-          style={{ background: 'none', border: 'none', color: '#db2777', fontWeight: 800, cursor: 'pointer', textDecoration: 'underline' }}
-        >
-          Login here
-        </button>
-      </p>
+          <div className="form-group">
+            <label>Mobile Number (Used for Login)</label>
+            <input
+              type="tel"
+              required
+              placeholder="Enter 10-digit mobile number"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Email Address (Optional)</label>
+            <input
+              type="email"
+              placeholder="name@example.com"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Create Password</label>
+            <input
+              type="password"
+              required
+              placeholder="Create a strong password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn-primary"
+            style={{ width: '100%', padding: '12px', marginTop: '10px' }}
+            disabled={loading}
+          >
+            {loading
+              ? 'Creating Account...'
+              : `Register & Open ${isRenter ? 'Renter' : 'Customer'} Dashboard`}
+          </button>
+
+          <p style={{ textAlign: 'center', fontSize: '0.85rem', marginTop: '1.2rem', color: '#705b64' }}>
+            Already registered?{' '}
+            <span
+              onClick={() => navigate('/login', { state: { role: activePortal } })}
+              style={{ color: '#e11d48', fontWeight: 800, cursor: 'pointer' }}
+            >
+              Login with Mobile Number
+            </span>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

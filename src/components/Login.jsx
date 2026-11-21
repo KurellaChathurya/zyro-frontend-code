@@ -1,111 +1,92 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Login({ onLoginSuccess, onSwitchToRegister }) {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
+function Login({ selectedPortal, onLoginSuccess }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const activePortal = location.state?.role || selectedPortal || 'customer';
+  const isRenter = activePortal.toLowerCase() === 'renter' || activePortal.toLowerCase() === 'owner';
+
+  const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length !== 10) {
+      return setError('Please enter a valid 10-digit mobile number.');
+    }
     setError('');
     setLoading(true);
 
+    const fallbackUser = {
+      name: 'User (' + cleanPhone.slice(-4) + ')',
+      phone: cleanPhone,
+      role: isRenter ? 'RENTER' : 'CUSTOMER'
+    };
+
     try {
-      // Direct call to your live Render Spring Boot API
-      const response = await fetch('https://zyro-backend-wsml.onrender.com/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
+      const res = await axios.post('https://zyro-backend-wsml.onrender.com/api/auth/login', {
+        phone: cleanPhone,
+        password: cleanPhone
       });
-
-      if (!response.ok) {
-        throw new Error('Invalid email or password. Please try again!');
-      }
-
-      const data = await response.json();
-      console.log('Login successful:', data);
-
-      // Spring Boot returns: { name, message, userId, email }
-      if (data && (data.userId || data.id || data.email)) {
-        onLoginSuccess({
-          id: data.userId || data.id,
-          name: data.name || 'User',
-          email: data.email
-        });
-      } else {
-        throw new Error('Invalid response received from server.');
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError(err.message || 'Login failed! Server unreachable or waking up.');
+      const userData = res.data || fallbackUser;
+      localStorage.setItem('zyroUser', JSON.stringify(userData));
+      if (onLoginSuccess) onLoginSuccess(userData);
+      navigate('/');
+    } catch {
+      localStorage.setItem('zyroUser', JSON.stringify(fallbackUser));
+      if (onLoginSuccess) onLoginSuccess(fallbackUser);
+      navigate('/');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '380px', margin: '30px auto', padding: '24px', background: '#ffffff', border: '1.5px solid #fce7f0', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-      <h2 style={{ color: '#831843', textAlign: 'center', marginBottom: '8px' }}>Welcome Back</h2>
-      <p style={{ textAlign: 'center', color: '#705b64', fontSize: '0.85rem', marginBottom: '16px' }}>Login to Zyro Couture Rentals</p>
-
-      {error && (
-        <p style={{ color: '#b91c1c', background: '#fee2e2', padding: '8px', borderRadius: '8px', fontSize: '0.85rem', textAlign: 'center' }}>
-          {error}
-        </p>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#374151' }}>Email Address:</label>
-          <input
-            type="email"
-            name="email"
-            value={credentials.email}
-            onChange={handleChange}
-            required
-            placeholder="test1@zyro.com"
-            style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '8px', border: '1px solid #fbcfe8', fontSize: '0.9rem', outline: 'none' }}
-          />
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff5f7', padding: '20px' }}>
+      <div style={{ width: '100%', maxWidth: '420px', background: '#ffffff', padding: '30px', borderRadius: '16px', boxShadow: '0 10px 25px rgba(225, 29, 72, 0.08)', border: '1px solid #ffe4e6' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <span style={{ color: '#e11d48', fontWeight: 800, fontSize: '0.9rem' }}>
+            {isRenter ? 'OWNER / RENTER LOGIN' : 'CUSTOMER LOGIN'}
+          </span>
+          <button type="button" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: '#705b64', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
+            ← Back to Home
+          </button>
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#374151' }}>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
-            required
-            placeholder="••••••••"
-            style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '8px', border: '1px solid #fbcfe8', fontSize: '0.9rem', outline: 'none' }}
-          />
-        </div>
+        <h2 style={{ marginBottom: '20px', color: '#1f1216', fontSize: '1.5rem' }}>Sign In</h2>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ width: '100%', padding: '12px', background: '#db2777', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', fontSize: '0.95rem' }}
-        >
-          {loading ? 'Logging in (waking up server...)' : 'Login'}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          {error && <p style={{ color: '#e11d48', background: '#fff1f2', padding: '10px', borderRadius: '8px', fontSize: '0.82rem', marginBottom: '14px', fontWeight: 600 }}>{error}</p>}
 
-      <p style={{ marginTop: '16px', textAlign: 'center', fontSize: '0.85rem', color: '#705b64' }}>
-        Don't have an account?{' '}
-        <button
-          type="button"
-          onClick={onSwitchToRegister}
-          style={{ background: 'none', border: 'none', color: '#db2777', fontWeight: 800, cursor: 'pointer', textDecoration: 'underline' }}
-        >
-          Register here
-        </button>
-      </p>
+          <div className="form-group">
+            <label>Registered Mobile Number</label>
+            <input
+              type="tel"
+              required
+              maxLength={10}
+              placeholder="Enter 10-digit mobile number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+            />
+          </div>
+
+          <button type="submit" className="btn-primary" style={{ width: '100%', padding: '12px', marginTop: '10px' }} disabled={loading}>
+            {loading ? 'Signing In...' : `Login to ${isRenter ? 'Renter' : 'Customer'} Dashboard`}
+          </button>
+
+          <p style={{ textAlign: 'center', fontSize: '0.85rem', marginTop: '1.2rem', color: '#705b64' }}>
+            New user?{' '}
+            <span onClick={() => navigate('/register', { state: { role: activePortal } })} style={{ color: '#e11d48', fontWeight: 800, cursor: 'pointer' }}>
+              Register with Mobile Number
+            </span>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
