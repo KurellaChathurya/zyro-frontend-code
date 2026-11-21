@@ -10,17 +10,17 @@ export function HowZyroWorksModal({ onClose }) {
         </div>
 
         <p style={{ fontSize: '0.84rem', color: '#4b5563', lineHeight: 1.5, marginBottom: '14px' }}>
-          <strong>Zyro</strong> connects peer-to-peer luxury outfit rentals with verified hyperlocal saree drapers in a single booking flow—solving both last-minute occasion wear and doorstep styling.
+          <strong>Zyro</strong> connects peer-to-peer luxury outfit rentals with verified hyperlocal saree drapers and two-way live outfit GPS tracking—giving complete peace of mind to both customers and dress owners.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: '10px', marginBottom: '14px' }}>
           <div style={{ background: '#fff1f2', border: '1.5px solid #fecdd3', borderRadius: '14px', padding: '12px' }}>
             <div style={{ fontWeight: 900, color: '#e11d48', fontSize: '0.85rem' }}>1. Customer Portal</div>
-            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Browse verified outfits, try AI Virtual Stylist, & get ₹100 Combo OFF with draping.</p>
+            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Browse outfits, track live delivery GPS, & get ₹100 Combo OFF with draping.</p>
           </div>
           <div style={{ background: '#fdf2f8', border: '1.5px solid #fbcfe8', borderRadius: '14px', padding: '12px' }}>
             <div style={{ fontWeight: 900, color: '#be185d', fontSize: '0.85rem' }}>2. Owner / Renter</div>
-            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Monetize wardrobe safely with escrow security deposit & return inspection.</p>
+            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Track outfit live during delivery & return pickup with escrow deposit safety.</p>
           </div>
           <div style={{ background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: '14px', padding: '12px' }}>
             <div style={{ fontWeight: 900, color: '#15803d', fontSize: '0.85rem' }}>3. 🥻 Saree Draper</div>
@@ -31,7 +31,7 @@ export function HowZyroWorksModal({ onClose }) {
         <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px', marginBottom: '14px' }}>
           <div style={{ fontWeight: 800, fontSize: '0.8rem', color: '#1e293b', marginBottom: '6px' }}>⚙️ Full-Stack System Architecture</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {['React.js + Vite (Vercel)', 'Java Spring Boot REST API (Render)', 'MySQL Relational DB', 'Gemini AI Virtual Stylist', 'UPI & Escrow Workflow'].map((tech) => (
+            {['React.js + Vite (Vercel)', 'Java Spring Boot REST API (Render)', 'MySQL Relational DB', 'Two-Way Live GPS Tracking', 'Gemini AI Virtual Stylist'].map((tech) => (
               <span key={tech} style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 9px', fontSize: '0.72rem', fontWeight: 700, color: '#334155' }}>
                 {tech}
               </span>
@@ -48,51 +48,143 @@ export function HowZyroWorksModal({ onClose }) {
 }
 
 export function LiveOrderTrackerBanner() {
-  const [activeStep, setActiveStep] = useState(2);
-  const steps = [
-    { label: 'Confirmed', icon: '✔', sub: 'Escrow & Slot Locked' },
-    { label: 'Dry-Cleaned & Packed', icon: '✨', sub: 'Steam Ironed & Quality Checked' },
-    { label: 'Out for Delivery / Stylist Assigned', icon: '🥻', sub: 'Arriving before event slot' },
-    { label: 'Returned', icon: '🔄', sub: 'Deposit Auto-Refunded' }
+  const [tripDirection, setTripDirection] = useState('DELIVERY'); // DELIVERY (Renter -> Customer) | RETURN (Customer -> Renter)
+  const [checkpointIdx, setCheckpointIdx] = useState(1);
+
+  const deliveryRoute = [
+    { spot: 'Renter Studio (Banjara Hills Rd 10)', time: '10:15 AM', status: 'Dispatched by Owner' },
+    { spot: 'Crossed Panjagutta & Begumpet Flyover', time: '10:32 AM', status: 'In Transit (Live GPS)' },
+    { spot: 'Arriving at Customer (Amberpet Main Rd)', time: 'ETA 8 mins', status: 'Reaching Destination' }
   ];
 
+  const returnRoute = [
+    { spot: 'Customer Pickup (Amberpet Main Rd)', time: '06:10 PM', status: 'Handed Over for Return' },
+    { spot: 'Crossed Himayatnagar & Lakdikapul', time: '06:28 PM', status: 'Returning to Owner (Live GPS)' },
+    { spot: 'Delivered to Renter (Banjara Hills Rd 10)', time: 'ETA 10 mins', status: 'Deposit Auto-Refund Ready' }
+  ];
+
+  const activeRoute = tripDirection === 'DELIVERY' ? deliveryRoute : returnRoute;
+  const currentPin = activeRoute[checkpointIdx];
+
+  const handleMapsPreview = () => {
+    const query = encodeURIComponent(currentPin.spot + ', Hyderabad');
+    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+  };
+
   return (
-    <div style={{ background: '#ffffff', border: '1.5px solid #fce7f0', borderRadius: '18px', padding: '14px 16px', marginBottom: '1.2rem', boxShadow: '0 6px 18px rgba(225,29,72,0.04)' }}>
+    <div style={{ background: '#ffffff', border: '1.5px solid #fce7f0', borderRadius: '18px', padding: '14px 16px', marginBottom: '1.2rem', boxShadow: '0 6px 18px rgba(225,29,72,0.05)' }}>
+      {/* HEADER + DIRECTION TOGGLE */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-        <div>
-          <span style={{ background: '#fff1f2', color: '#e11d48', fontSize: '0.7rem', fontWeight: 800, padding: '3px 8px', borderRadius: '8px', marginRight: '8px' }}>
-            LIVE TRACKER
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '0.7rem', fontWeight: 900, padding: '3px 9px', borderRadius: '8px' }}>
+            ● LIVE OUTFIT GPS
           </span>
-          <strong style={{ fontSize: '0.86rem', color: '#1f161a' }}>Active Order #ZYR-2026 (Kanjeevaram Silk + 🥻 Stylist Combo)</strong>
+          <strong style={{ fontSize: '0.88rem', color: '#1f161a' }}>
+            Order #ZYR-2026 • Kanjeevaram Bridal Silk
+          </strong>
         </div>
-        <button
-          type="button"
-          onClick={() => setActiveStep((prev) => (prev + 1) % steps.length)}
-          style={{ background: '#fdf2f8', border: '1px solid #fbcfe8', color: '#be185d', fontSize: '0.72rem', fontWeight: 800, padding: '4px 10px', borderRadius: '10px', cursor: 'pointer' }}
-        >
-          Simulate Next Stage →
-        </button>
+
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={() => { setTripDirection('DELIVERY'); setCheckpointIdx(1); }}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '10px',
+              border: '1.5px solid',
+              borderColor: tripDirection === 'DELIVERY' ? '#e11d48' : '#e5e7eb',
+              background: tripDirection === 'DELIVERY' ? '#fff1f2' : '#fff',
+              color: tripDirection === 'DELIVERY' ? '#e11d48' : '#4b5563',
+              fontSize: '0.73rem',
+              fontWeight: 800,
+              cursor: 'pointer'
+            }}
+          >
+            🚚 Delivery to Customer
+          </button>
+          <button
+            type="button"
+            onClick={() => { setTripDirection('RETURN'); setCheckpointIdx(1); }}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '10px',
+              border: '1.5px solid',
+              borderColor: tripDirection === 'RETURN' ? '#be185d' : '#e5e7eb',
+              background: tripDirection === 'RETURN' ? '#fdf2f8' : '#fff',
+              color: tripDirection === 'RETURN' ? '#be185d' : '#4b5563',
+              fontSize: '0.73rem',
+              fontWeight: 800,
+              cursor: 'pointer'
+            }}
+          >
+            🔄 Return to Renter
+          </button>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
-        {steps.map((s, idx) => {
-          const done = idx <= activeStep;
+      {/* CURRENT LIVE LOCATION BAR */}
+      <div style={{
+        background: tripDirection === 'DELIVERY' ? '#fff5f7' : '#fdf2f8',
+        border: '1px solid #fbcfe8',
+        borderRadius: '12px',
+        padding: '10px 12px',
+        marginBottom: '10px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '8px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#be185d' }}>
+            {tripDirection === 'DELIVERY'
+              ? '📍 Live Location (Visible to Customer & Renter):'
+              : '📍 Return Tracking (Visible to Renter & Customer):'}
+          </div>
+          <div style={{ fontSize: '0.86rem', fontWeight: 900, color: '#1f161a', marginTop: '2px' }}>
+            {currentPin.spot} <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#15803d' }}>({currentPin.status} • {currentPin.time})</span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            type="button"
+            onClick={() => setCheckpointIdx((prev) => (prev + 1) % activeRoute.length)}
+            style={{ background: '#ffffff', border: '1px solid #fbcfe8', color: '#be185d', fontSize: '0.72rem', fontWeight: 800, padding: '5px 10px', borderRadius: '9px', cursor: 'pointer' }}
+          >
+            Refresh GPS Pin ↻
+          </button>
+          <button
+            type="button"
+            onClick={handleMapsPreview}
+            style={{ background: '#e11d48', border: 'none', color: '#ffffff', fontSize: '0.72rem', fontWeight: 800, padding: '5px 10px', borderRadius: '9px', cursor: 'pointer' }}
+          >
+            🗺️ View on Map
+          </button>
+        </div>
+      </div>
+
+      {/* 3-POINT LIVE ROUTE CHECKPOINTS */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '8px' }}>
+        {activeRoute.map((pt, idx) => {
+          const isCurrent = idx === checkpointIdx;
+          const isPassed = idx < checkpointIdx;
           return (
             <div
-              key={s.label}
-              onClick={() => setActiveStep(idx)}
+              key={pt.spot}
+              onClick={() => setCheckpointIdx(idx)}
               style={{
                 padding: '8px 10px',
-                borderRadius: '12px',
-                border: `1.5px solid ${done ? '#22c55e' : '#e5e7eb'}`,
-                background: done ? '#f0fdf4' : '#f9fafb',
+                borderRadius: '11px',
+                border: `1.5px solid ${isCurrent ? '#e11d48' : isPassed ? '#22c55e' : '#e5e7eb'}`,
+                background: isCurrent ? '#fff1f2' : isPassed ? '#f0fdf4' : '#f9fafb',
                 cursor: 'pointer'
               }}
             >
-              <div style={{ fontSize: '0.76rem', fontWeight: 800, color: done ? '#15803d' : '#6b7280' }}>
-                {done ? '✅' : '⏳'} {s.label}
+              <div style={{ fontSize: '0.73rem', fontWeight: 800, color: isCurrent ? '#e11d48' : isPassed ? '#15803d' : '#6b7280' }}>
+                {isCurrent ? '📍 LIVE HERE' : isPassed ? '✅ PASSED' : '⏳ UPCOMING'} • {pt.time}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#4b5563', marginTop: '2px' }}>{s.sub}</div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#1f2937', marginTop: '2px' }}>{pt.spot}</div>
             </div>
           );
         })}
