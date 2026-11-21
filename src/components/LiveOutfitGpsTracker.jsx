@@ -1,54 +1,7 @@
 import React, { useState } from 'react';
 
-export function HowZyroWorksModal({ onClose }) {
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '560px', maxHeight: '88vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ margin: 0, color: '#be185d' }}>ℹ️ How Zyro Works — Hyperlocal P2P Ecosystem</h3>
-          <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 800 }}>✕</button>
-        </div>
-
-        <p style={{ fontSize: '0.84rem', color: '#4b5563', lineHeight: 1.5, marginBottom: '14px' }}>
-          <strong>Zyro</strong> connects peer-to-peer luxury outfit rentals with verified hyperlocal saree drapers and two-way live outfit GPS tracking—giving complete peace of mind to both customers and dress owners.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: '10px', marginBottom: '14px' }}>
-          <div style={{ background: '#fff1f2', border: '1.5px solid #fecdd3', borderRadius: '14px', padding: '12px' }}>
-            <div style={{ fontWeight: 900, color: '#e11d48', fontSize: '0.85rem' }}>1. Customer Portal</div>
-            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Browse outfits, track live delivery GPS, & get ₹100 Combo OFF with draping.</p>
-          </div>
-          <div style={{ background: '#fdf2f8', border: '1.5px solid #fbcfe8', borderRadius: '14px', padding: '12px' }}>
-            <div style={{ fontWeight: 900, color: '#be185d', fontSize: '0.85rem' }}>2. Owner / Renter</div>
-            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Track outfit live during delivery & return pickup with escrow deposit safety.</p>
-          </div>
-          <div style={{ background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: '14px', padding: '12px' }}>
-            <div style={{ fontWeight: 900, color: '#15803d', fontSize: '0.85rem' }}>3. 🥻 Saree Draper</div>
-            <p style={{ fontSize: '0.75rem', color: '#374151', margin: '4px 0 0' }}>Local stylists list slots, accept Muhurtham bookings, & receive direct UPI payouts.</p>
-          </div>
-        </div>
-
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px', marginBottom: '14px' }}>
-          <div style={{ fontWeight: 800, fontSize: '0.8rem', color: '#1e293b', marginBottom: '6px' }}>⚙️ Full-Stack System Architecture</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {['React.js + Vite (Vercel)', 'Java Spring Boot REST API (Render)', 'MySQL Relational DB', 'Two-Way Live GPS Tracking', 'Gemini AI Virtual Stylist'].map((tech) => (
-              <span key={tech} style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 9px', fontSize: '0.72rem', fontWeight: 700, color: '#334155' }}>
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button type="button" className="btn-primary" onClick={onClose}>Got It — Back to Live Demo</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function LiveOrderTrackerBanner() {
-  const [tripDirection, setTripDirection] = useState('DELIVERY'); // DELIVERY (Renter -> Customer) | RETURN (Customer -> Renter)
+function LiveOutfitGpsTracker() {
+  const [tripDirection, setTripDirection] = useState('DELIVERY');
   const [checkpointIdx, setCheckpointIdx] = useState(1);
 
   const deliveryRoute = [
@@ -73,7 +26,6 @@ export function LiveOrderTrackerBanner() {
 
   return (
     <div style={{ background: '#ffffff', border: '1.5px solid #fce7f0', borderRadius: '18px', padding: '14px 16px', marginBottom: '1.2rem', boxShadow: '0 6px 18px rgba(225,29,72,0.05)' }}>
-      {/* HEADER + DIRECTION TOGGLE */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '0.7rem', fontWeight: 900, padding: '3px 9px', borderRadius: '8px' }}>
@@ -122,7 +74,6 @@ export function LiveOrderTrackerBanner() {
         </div>
       </div>
 
-      {/* CURRENT LIVE LOCATION BAR */}
       <div style={{
         background: tripDirection === 'DELIVERY' ? '#fff5f7' : '#fdf2f8',
         border: '1px solid #fbcfe8',
@@ -164,7 +115,6 @@ export function LiveOrderTrackerBanner() {
         </div>
       </div>
 
-      {/* 3-POINT LIVE ROUTE CHECKPOINTS */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '8px' }}>
         {activeRoute.map((pt, idx) => {
           const isCurrent = idx === checkpointIdx;
@@ -192,3 +142,5 @@ export function LiveOrderTrackerBanner() {
     </div>
   );
 }
+
+export default LiveOutfitGpsTracker;
