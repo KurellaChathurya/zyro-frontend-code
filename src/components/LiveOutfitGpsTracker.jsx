@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-function LiveOutfitGpsTracker() {
-  const [tripDirection, setTripDirection] = useState('DELIVERY');
+function LiveOutfitGpsTracker({ defaultDirection = 'DELIVERY', portalLabel = 'Customer' }) {
+  const [tripDirection, setTripDirection] = useState(defaultDirection);
   const [checkpointIdx, setCheckpointIdx] = useState(1);
 
   const deliveryRoute = [
@@ -32,7 +32,7 @@ function LiveOutfitGpsTracker() {
             ● LIVE OUTFIT GPS
           </span>
           <strong style={{ fontSize: '0.88rem', color: '#1f161a' }}>
-            Order #ZYR-2026 • Kanjeevaram Bridal Silk
+            Order #ZYR-2026 • Kanjeevaram Bridal Silk ({portalLabel} Live Tracking)
           </strong>
         </div>
 

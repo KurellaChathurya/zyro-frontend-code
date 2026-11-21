@@ -677,7 +677,6 @@ function MainApp({ currentUser, setCurrentUser }) {
             <span style={{ fontSize: "0.82rem", fontWeight: 800 }}>🎉 Zyro Wedding Combo: Rent any Saree/Lehenga + Book a 🥻 Saree Draper & get instant ₹100 OFF!</span>
             <button type="button" onClick={() => setActiveView('draper-portal')} style={{ background: "#fff", color: "#be185d", border: "none", padding: "5px 12px", borderRadius: "10px", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer" }}>Explore 🥻 Drapers</button>
           </div>
-          <LiveOutfitGpsTracker />
           {showHowItWorks && <HowZyroWorksModal onClose={() => setShowHowItWorks(false)} />}
           {activeView === 'draper-portal' && (
             <SareeDraperPortal currentUser={currentUser} onBackToShop={() => setActiveView('shop')} />
