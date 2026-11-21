@@ -6,6 +6,7 @@ import Login from './components/Login';
 import OwnerEarningsSummary from './components/OwnerEarningsSummary';
 import CatalogFilters from './components/CatalogFilters';
 import SareeDrapingAddon from './components/SareeDrapingAddon';
+import SareeDraperPortal from './components/SareeDraperPortal';
 import './App.css';
 
 import { SHOWCASE_PRODUCTS } from './data/showcaseProducts';
@@ -150,7 +151,10 @@ function MainApp({ currentUser, setCurrentUser }) {
 
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.role === 'RENTER' || currentUser.role === 'OWNER') {
+      if (currentUser.role === 'DRAPER') {
+        setSelectedPortal('draper');
+        setActiveView('draper-portal');
+      } else if (currentUser.role === 'RENTER' || currentUser.role === 'OWNER') {
         setSelectedPortal('renter');
         setActiveView('renter-dashboard');
       } else {
@@ -224,6 +228,12 @@ function MainApp({ currentUser, setCurrentUser }) {
         setActiveView('shop');
       } else {
         navigate('/register', { state: { role: 'customer' } });
+      }
+    } else if (portalName === 'draper') {
+      if (currentUser) {
+        setActiveView('draper-portal');
+      } else {
+        navigate('/register', { state: { role: 'draper' } });
       }
     } else if (portalName === 'renter') {
       if (currentUser) {
@@ -560,6 +570,26 @@ function MainApp({ currentUser, setCurrentUser }) {
               </div>
 
               <div
+                onClick={() => handlePortalClick('draper')}
+                style={{
+                  padding: '14px',
+                  borderRadius: '16px',
+                  border: `2px solid ${selectedPortal === 'draper' ? '#e11d48' : '#fce7f0'}`,
+                  background: selectedPortal === 'draper' ? '#fff1f2' : '#fff',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '1.5rem' }}>💄</span>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: '#1f161a' }}>Saree Draper Portal</h4>
+                    <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: '#705b64' }}>Book stylists or register as draper</p>
+                  </div>
+                </div>
+              </div>
+
+              <div
                 onClick={() => handlePortalClick('ai-stylist')}
                 style={{
                   padding: '14px',
@@ -616,7 +646,8 @@ function MainApp({ currentUser, setCurrentUser }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '1.5rem' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 900, color: '#1f161a' }}>
-                {activeView === 'ai-stylist' ? '✨ AI Virtual Stylist Studio' :
+                {activeView === 'draper-portal' ? '💄 Saree Draper Service Portal' :
+                 activeView === 'ai-stylist' ? '✨ AI Virtual Stylist Studio' :
                  activeView === 'renter-dashboard' ? '👗 Renter Wardrobe & Inspections' :
                  activeView === 'profile' ? '👤 My Rental Account' :
                  activeView === 'wishlist' ? '❤️ My Saved Wishlist' :
@@ -638,6 +669,10 @@ function MainApp({ currentUser, setCurrentUser }) {
               </div>
             )}
           </div>
+
+          {activeView === 'draper-portal' && (
+            <SareeDraperPortal currentUser={currentUser} onBackToShop={() => setActiveView('shop')} />
+          )}
 
           {/* VIEW 1: AI VIRTUAL STYLIST STUDIO */}
           {activeView === 'ai-stylist' && (
